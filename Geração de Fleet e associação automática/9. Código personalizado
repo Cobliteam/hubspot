@@ -1,0 +1,66 @@
+//INB - supply__envio__fleet_name - dealname
+//OUT - erro
+//OUT - fleetid2
+
+//Execução de tentativa pela segunda vez, mudando o nome com um novo caracter
+
+const hubspot = require('@hubspot/api-client');
+const axios = require('axios'); // for http requests
+
+exports.main = async (event, callback) => {
+  
+  
+var dealname = event.inputFields['dealname'] + '.';
+   
+  
+     var options = {
+	'cobli-api-key':'f26paMP.204df700-788f-49d2-b66e-ebcc5c4b8bd1',
+    'Content-Type': 'application/json' 
+				   };
+	
+
+
+  
+    var requestBody = {
+		"fleet":{"name": dealname  }
+					 };
+  
+
+    //Criação de frota
+ 	axios.post( 'https://api.cobli.co/herbie-1.1/dash/fleet', requestBody,
+    			  { headers: options } )
+  
+  
+ .then(response =>{
+
+      let fleetid = (response.data.fleet.id);
+      
+       callback({
+        outputFields: {
+          fleetid2: fleetid
+        }
+      });
+      
+	console.log(response.data);
+          
+   
+         
+        }).catch((error) => {
+   console.log("resultado é = "  + error); 
+      
+      let erro = (error);
+      
+       callback({
+        outputFields: {
+        erro: erro,
+           fleetid2:'Erro na Integração'
+        
+        } 
+       });     
+        });
+}
+
+
+
+
+
