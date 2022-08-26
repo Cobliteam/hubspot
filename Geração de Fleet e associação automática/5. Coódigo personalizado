@@ -1,0 +1,67 @@
+// INB- supply__envio__fleet_name - Fleet_name
+// OUT- registros
+
+//Valida se Existe Fleet ID criado apra Fleet_NAME
+
+const hubspot = require('@hubspot/api-client');
+const axios = require('axios'); // for http requests
+
+exports.main = async (event, callback) => {
+  
+  
+var fleet_name = event.inputFields['fleet_name'];
+   
+     var header = {
+	'x-algolia-api-key':'63d6783efa32ae156a55e4d684f03c70',
+    'x-algolia-application-id': 'MX7EIBNZFK',
+    'Content-Type': 'application/json' 
+				   };
+	
+
+
+  
+    var requestBody = {
+			"requests":[{"indexName":"prod_FLEET",
+			"params":"highlightPreTag=%3Cais-highlight-0000000000%3E&highlightPostTag=%3C%2Fais-highlight-0000000000%3E&hitsPerPage=15&query="+ fleet_name +"&facets=%5B%5D&tagFilters="}]
+					 };
+  
+
+    //Criação de frota
+ 	axios.post( 'https://mx7eibnzfk-dsn.algolia.net/1/indexes/*/queries?x-algolia-agent=Algolia%20for%20JavaScript%20(4.8.5)%3B%20Browser', requestBody,
+    			  { headers: header } )
+  
+  
+ .then(response =>{
+
+      let nbhits = (response.data.results[0].nbHits);
+      
+       callback({
+        outputFields: {
+	      registros: nbhits
+        }
+      }); 
+   
+      
+	console.log(response.data);
+          
+   
+         
+        }).catch((error) => {
+   console.log("resultado é = "  + error); 
+      
+     /* let erro = (error);
+      
+       callback({
+        outputFields: {
+	      erro: erro
+        }
+      });
+      */
+      
+        });
+}
+
+
+
+
+
