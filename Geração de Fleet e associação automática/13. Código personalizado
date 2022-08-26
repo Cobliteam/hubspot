@@ -1,0 +1,74 @@
+//INB - supply__envio__fleet_id - fleetid
+//INB - supply__envio__email_de_acesso -  email
+
+const hubspot = require('@hubspot/api-client');
+const axios = require('axios'); // for http requests
+
+exports.main = async (event, callback) => {
+	var fleetid = event.inputFields['fleetid'];
+    var email = event.inputFields['email'];
+
+   
+     var options = {
+	'cobli-api-key': 'f26paMP.204df700-788f-49d2-b66e-ebcc5c4b8bd1',
+    'Content-Type': 'application/json'
+				   };
+	
+
+
+  
+    var requestBody = {
+		'email_address': email,
+		'fleet_id': fleetid,
+		'role':"fleet",
+        'groups_restriction':[]
+                      };
+  
+  
+
+		  
+		
+    //Criação de frota
+ 	axios.post( 'https://api.cobli.co/herbie-1.1/account/admin/invites', 
+                requestBody,
+    		      { headers: options } 
+              )
+  
+
+  
+  
+ .then(response =>{
+
+      let status = (response.data.status);
+      
+      
+      
+       if( status == null || status == 'success') {
+    
+
+    
+          callback({
+        outputFields: {
+	       status: "sucesso",
+        }
+      });
+    
+    
+  } 
+          
+	console.log(response.data);
+          
+   
+         
+        }).catch((error) => {
+   console.log("resultado é = "  + error); 
+
+        });
+  
+
+}
+
+
+
+
+
